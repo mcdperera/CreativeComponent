@@ -1,0 +1,335 @@
+fileFormatVersion: 2
+guid: 6d9fa0452ad6d8740abfed56f5f98fb4
+timeCreated: 1521736123
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: BRAZO1
+    100002: Group1
+    100004: Group10
+    100006: Group11
+    100008: Group12
+    100010: Group13
+    100012: Group14
+    100014: Group15
+    100016: Group16
+    100018: Group2
+    100020: Group3
+    100022: Group4
+    100024: Group5
+    100026: Group6
+    100028: Group7
+    100030: Group8
+    100032: Group9
+    100034: Grupo_14_1
+    100036: Mesh1
+    100038: Mesh10
+    100040: Mesh11
+    100042: Mesh12
+    100044: Mesh13
+    100046: Mesh14
+    100048: Mesh15
+    100050: Mesh16
+    100052: Mesh17
+    100054: Mesh18
+    100056: Mesh2
+    100058: Mesh3
+    100060: Mesh4
+    100062: Mesh5
+    100064: Mesh6
+    100066: Mesh7
+    100068: Mesh8
+    100070: Mesh9
+    100072: //RootNode
+    100074: skp5590_1
+    400000: BRAZO1
+    400002: Group1
+    400004: Group10
+    400006: Group11
+    400008: Group12
+    400010: Group13
+    400012: Group14
+    400014: Group15
+    400016: Group16
+    400018: Group2
+    400020: Group3
+    400022: Group4
+    400024: Group5
+    400026: Group6
+    400028: Group7
+    400030: Group8
+    400032: Group9
+    400034: Grupo_14_1
+    400036: Mesh1
+    400038: Mesh10
+    400040: Mesh11
+    400042: Mesh12
+    400044: Mesh13
+    400046: Mesh14
+    400048: Mesh15
+    400050: Mesh16
+    400052: Mesh17
+    400054: Mesh18
+    400056: Mesh2
+    400058: Mesh3
+    400060: Mesh4
+    400062: Mesh5
+    400064: Mesh6
+    400066: Mesh7
+    400068: Mesh8
+    400070: Mesh9
+    400072: //RootNode
+    400074: skp5590_1
+    2300000: Mesh1
+    2300002: Mesh10
+    2300004: Mesh11
+    2300006: Mesh12
+    2300008: Mesh13
+    2300010: Mesh14
+    2300012: Mesh15
+    2300014: Mesh16
+    2300016: Mesh17
+    2300018: Mesh18
+    2300020: Mesh2
+    2300022: Mesh3
+    2300024: Mesh4
+    2300026: Mesh5
+    2300028: Mesh6
+    2300030: Mesh7
+    2300032: Mesh8
+    2300034: Mesh9
+    3300000: Mesh1
+    3300002: Mesh10
+    3300004: Mesh11
+    3300006: Mesh12
+    3300008: Mesh13
+    3300010: Mesh14
+    3300012: Mesh15
+    3300014: Mesh16
+    3300016: Mesh17
+    3300018: Mesh18
+    3300020: Mesh2
+    3300022: Mesh3
+    3300024: Mesh4
+    3300026: Mesh5
+    3300028: Mesh6
+    3300030: Mesh7
+    3300032: Mesh8
+    3300034: Mesh9
+    4300000: Mesh1
+    4300002: Mesh2
+    4300004: Mesh3
+    4300006: Mesh4
+    4300008: Mesh5
+    4300010: Mesh6
+    4300012: Mesh7
+    4300014: Mesh8
+    4300016: Mesh9
+    4300018: Mesh10
+    4300020: Mesh11
+    4300022: Mesh12
+    4300024: Mesh13
+    4300026: Mesh14
+    4300028: Mesh15
+    4300030: Mesh16
+    4300032: Mesh17
+    4300034: Mesh18
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BackColor
+    second: {fileID: 2100000, guid: 64508328739493540b51f644a964a18c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_006
+    second: {fileID: 2100000, guid: 140531420917e22419061860d3f90128, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_007
+    second: {fileID: 2100000, guid: a35fd9b9001c89f4ab357a9dadbef9c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_B05
+    second: {fileID: 2100000, guid: d7b3bb05d638aff4cb33f865827ffb0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_I17
+    second: {fileID: 2100000, guid: 05ad61a00ed79b5458647409644389e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FrontColor
+    second: {fileID: 2100000, guid: fa1c8622293186f41801858877776faa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Light_Blue
+    second: {fileID: 2100000, guid: 90379648dae14d449af21e7f0a2db3f0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MATIRIS1
+    second: {fileID: 2100000, guid: 0f65e895b2c9558418dcf918f12b57ff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0013_LightCoral
+    second: {fileID: 2100000, guid: 7a6491dcf0ae90e4490f55ad8381c8d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0017_IndianRed
+    second: {fileID: 2100000, guid: c1029250bf867e3498c3d78eee7f0835, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0128_White
+    second: {fileID: 2100000, guid: fa520d9241a88fb4e9f0fb95f1aadece, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_0133_Gray
+    second: {fileID: 2100000, guid: 6467a91252d5b3e4ba5c3655f10a7d30, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_96_96_96
+    second: {fileID: 2100000, guid: fde7741ec70dd03448cca4b950a85b8d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Aluminum_Anodized
+    second: {fileID: 2100000, guid: 81c0aa017786beb4e944501329386f81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Translucent_Glass_Tinted
+    second: {fileID: 2100000, guid: bcc729f6a070f6445870675625f27c4b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WarmGray3
+    second: {fileID: 2100000, guid: 905d8b08eda042e4fafb6db549d3858b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Charcoal_
+    second: {fileID: 2100000, guid: 89bb6f653c5ead240b3d4b6b0b54e6c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _auto_15
+    second: {fileID: 2100000, guid: 7a84c73435d27774c96d5d0a11a12981, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _auto_3
+    second: {fileID: 2100000, guid: 1d7bac80398c59d4b804d9c22b86ec58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: black
+    second: {fileID: 2100000, guid: ea7babb0934f33045a565360c5070a3f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hair3
+    second: {fileID: 2100000, guid: db3d9be1d8c671d4e9851db2ed766118, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: jean_blue
+    second: {fileID: 2100000, guid: b9a5d5e9a3d856442bb78773c5299c21, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lips1
+    second: {fileID: 2100000, guid: d42ee8e17ea7c544892e4ca39e18f708, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: skin1
+    second: {fileID: 2100000, guid: 6f944ef8ee1ff5142a79c90d9843a33e, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
