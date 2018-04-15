@@ -6,10 +6,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Client2 : MonoBehaviour
 {
+    public GameObject quad1;
 
     public Canvas tableCanvas;
     public GameObject ThinkBubble;
@@ -128,30 +130,46 @@ public class Client2 : MonoBehaviour
 
         loadPanelCardButtons(list, true);
 
-        loadCardToPanel("c8", opponentSelectedCardPanel);
+        //loadCardToPanel("c8", opponentSelectedCardPanel);
 
-        loadWonCard(opponentWonCardPanel);
-        loadWonCard(playerWonCardPanel);
+        //loadWonCard(opponentWonCardPanel);
+        //loadWonCard(playerWonCardPanel);
 
-        loadOpponentPanelCardButtons(3);
+        //loadOpponentPanelCardButtons(3);
 
-        //loadselectedTrumph("s");
-        this.CurrentPlayerName = "Player_1";
-        playerNameText.text = "Player 1";
+        ////loadselectedTrumph("s");
+        //this.CurrentPlayerName = "Player_1";
+        //playerNameText.text = "Player 1";
 
-        panelShow(trumphSelectingPanel);
+        //panelShow(trumphSelectingPanel);
 
-        loadselectedTrumph(new BiddingMessage("Player_1", 0, "h"));
+        //loadselectedTrumph(new BiddingMessage("Player_1", 0, "h"));
 
 
 
-        displayMessage("Waiting for the other player choose the trump!");
-        gameObjectShow(avatar);
-        displayMessage("Choose a trump!");
+        //displayMessage("Waiting for the other player choose the trump!");
+        //gameObjectShow(avatar);
+        //displayMessage("Choose a trump!");
 
 
         //StartCoroutine(Move(cube1, cube2.transform.localPosition));
     }
+
+    public GameObject[] wayPoints;
+
+    private GameObject wayPoint;
+
+    bool isRotate = false;
+
+    private GameObject currentQuadObject;
+
+    private float lerpTime = 10;
+
+    private float currentLerpTime = 0;
+    
+    private int num = 0;
+
+    private bool go = false;
 
     void Update()
     {
@@ -160,8 +178,50 @@ public class Client2 : MonoBehaviour
             readMessage();
         }
 
-    }
 
+        if (go)
+        {
+            currentLerpTime += Time.deltaTime;
+
+            if (currentLerpTime >= lerpTime)
+            {
+                currentLerpTime = lerpTime;
+            }
+
+            float prec = currentLerpTime / lerpTime;
+
+            if (isRotate)
+            {
+                currentQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+            }
+
+            currentQuadObject.transform.position = Vector3.Lerp(currentQuadObject.transform.localPosition, wayPoint.transform.localPosition, prec);
+
+            if (currentQuadObject.transform.position == wayPoints[wayPoints.Length - 1].transform.position)
+            {
+                print("done 1");
+                isRotate = false;
+
+                currentLerpTime = 0;
+                num = 0;
+                go = false;
+            }
+            else if (currentQuadObject.transform.position == wayPoints[num].transform.position)
+            {
+                print("Move to " + num);
+
+                num++;
+
+                currentLerpTime = 0;
+                wayPoint = wayPoints[num];
+                isRotate = true;
+                
+            }
+       
+        }
+
+    }
+    
     private void ConnectToServer()
     {
         TcpClient client = new TcpClient("10.203.72.10", 1500);
@@ -190,9 +250,7 @@ public class Client2 : MonoBehaviour
 
         writeMessage(message);
     }
-
-    float speed = 0.5f;
-
+    
     public void ClickReset()
     {
         print("Reset");
@@ -597,43 +655,66 @@ public class Client2 : MonoBehaviour
         currentCardList = new List<string>();
         currentCardList = cards;
 
-        destroyChilds(playerCardPanel);
-
-        // panelHide(cardPanel);
-
-        int i = 0;
+        int i = 1;
 
         foreach (String card in cards)
         {
+            String buttonName = "Button_" + i;
 
-            float corrdicate = i * 3;
+            Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
-            GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
+            button.GetComponent<Image>().sprite = getSprite(card);
 
-            goButton.name = card;
+            button.tag = card;
 
-            //goButton.transform.SetParent(playerCardPanel, isInteractable);
+            String quadName = "Quad_" + i;
 
-            goButton.transform.SetParent(playerCardPanel.transform);
+            GameObject myQuad = GameObject.Find(quadName);
 
-            //goButton.transform.localScale = new Vector3(.50f, .50f, .50f);
-            goButton.transform.localPosition = new Vector3(corrdicate, 0, 0);
+            Material yourMaterial = (Material)Resources.Load("images/Materials/" + card, typeof(Material));
 
-
-            // set button click
-            Button tempButton = goButton.GetComponentInChildren<Button>();
-            tempButton.onClick.AddListener(() => CardSelectButton_OnClick(card));
-            tempButton.interactable = isInteractable;
-            //tempButton.interactable = isInteractable;
-
-            Image image = goButton.GetComponentInChildren<Image>();
-
-            image.sprite = getSprite(card);
-
-            gameObjectShow(goButton);
+            myQuad.GetComponent<Renderer>().material = yourMaterial;
 
             i++;
         }
+
+        //destroyChilds(playerCardPanel);
+
+        // panelHide(cardPanel);
+
+        //int i = 0;
+
+        //foreach (String card in cards)
+        //{
+
+        //    float corrdicate = i * 3;
+
+        //    GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
+
+        //    goButton.name = card;
+
+        //    //goButton.transform.SetParent(playerCardPanel, isInteractable);
+
+        //    goButton.transform.SetParent(playerCardPanel.transform);
+
+        //    //goButton.transform.localScale = new Vector3(.50f, .50f, .50f);
+        //    goButton.transform.localPosition = new Vector3(corrdicate, 0, 0);
+
+
+        //    // set button click
+        //    Button tempButton = goButton.GetComponentInChildren<Button>();
+        //    tempButton.onClick.AddListener(() => CardSelectButton_OnClick(card));
+        //    tempButton.interactable = isInteractable;
+        //    //tempButton.interactable = isInteractable;
+
+        //    Image image = goButton.GetComponentInChildren<Image>();
+
+        //    image.sprite = getSprite(card);
+
+        //    gameObjectShow(goButton);
+
+        //    i++;
+        //}
 
         playerCardPanel.gameObject.SetActive(true);
     }
@@ -696,7 +777,7 @@ public class Client2 : MonoBehaviour
 
         //       goButton.transform.parent = Player1BottomPosition.transform;
         //        goButton.transform.position = Player1BottomPosition.transform.position;
-       
+
 
         if (this.CurrentPlayerName.ToLower() == player1name)
         {
@@ -851,9 +932,9 @@ public class Client2 : MonoBehaviour
 
     private IEnumerator Move(GameObject obj, Vector3 position)
     {
-        StartCoroutine(Move(obj, obj.gameObject.transform.localPosition, position, getSpeed(6)));
+        StartCoroutine(Move(obj, obj.gameObject.transform.localPosition, position, getSpeed(10)));
 
-        waitForSeconds(6f);
+        waitForSeconds(10f);
 
         yield return new WaitForSeconds(getSpeed(10));
     }
@@ -925,7 +1006,32 @@ public class Client2 : MonoBehaviour
 
         ThinkBubble.SetActive(false);
     }
+    
+    public void CardSelectButton2_OnClick(int id)
+    {
+        String buttonName = "Button_" + id;
+        Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
+        button.gameObject.SetActive(false);
+        print(button.tag);
 
+        String quadName = "Quad_" + id;
+        GameObject myQuad = GameObject.Find(quadName);
+        currentQuadObject = myQuad;
+
+        num = 0;
+
+        wayPoint = wayPoints[num];
+
+        go = true;
+
+        Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + "c2", false, 0);
+
+        message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, "c2"));
+
+        //StartCoroutine(waitForSeconds(2f, message));
+
+    }
+    
 
 
 

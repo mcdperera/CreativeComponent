@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class Client : MonoBehaviour
 {
+    public GameObject oquad;
 
     public GameObject ThinkBubble;
     public Text thinkBubbleText;
@@ -81,6 +82,32 @@ public class Client : MonoBehaviour
 
     private const string player1name = "player_1";
 
+    public GameObject[] wayPoints;
+
+    public GameObject[] opponenetWayPoints;
+
+    private GameObject wayPoint;
+
+    private GameObject opponenetWayPoint;
+
+    bool isRotate = false;
+
+    private GameObject currentQuadObject;
+
+    private GameObject currentOpnontQuadObject;
+
+    private float lerpTime = 10;
+
+    private float currentLerpTime = 0;
+
+    private int num = 0;
+
+    private bool isPlayerMoveCard = false;
+
+    private bool isOppenonetPlayerMoveCard = false;
+
+    private List<int> selectedCardIdList;
+
     private void Awake()
     {
         Button btn = connectButton.GetComponent<Button>();
@@ -105,6 +132,8 @@ public class Client : MonoBehaviour
 
     void Start()
     {
+        selectedCardIdList = new List<int>();
+
         //List<string> list = new List<string>();
 
         //list.Add("c9");
@@ -148,11 +177,92 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        if (isConnected && stream.CanRead)
+        if (isConnected && stream != null && stream.CanRead)
         {
             readMessage();
         }
 
+        if (isPlayerMoveCard)
+        {
+            currentLerpTime += Time.deltaTime;
+
+            if (currentLerpTime >= lerpTime)
+            {
+                currentLerpTime = lerpTime;
+            }
+
+            float prec = currentLerpTime / lerpTime;
+
+            if (isRotate)
+            {
+                currentQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+            }
+
+            currentQuadObject.transform.position = Vector3.Lerp(currentQuadObject.transform.localPosition, wayPoint.transform.localPosition, prec);
+
+            if (currentQuadObject.transform.position == wayPoints[wayPoints.Length - 1].transform.position)
+            {
+                print("done 1");
+                isRotate = false;
+
+                currentLerpTime = 0;
+                num = 0;
+                isPlayerMoveCard = false;
+            }
+            else if (currentQuadObject.transform.position == wayPoints[num].transform.position)
+            {
+                print("Move to " + num);
+
+                num++;
+
+                currentLerpTime = 0;
+                wayPoint = wayPoints[num];
+                isRotate = true;
+
+            }
+
+        }
+
+
+        if (isOppenonetPlayerMoveCard)
+        {
+            currentLerpTime += Time.deltaTime;
+
+            if (currentLerpTime >= lerpTime)
+            {
+                currentLerpTime = lerpTime;
+            }
+
+            float prec = currentLerpTime / lerpTime;
+
+            if (isRotate)
+            {
+                oquad.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+            }
+
+            oquad.transform.position = Vector3.Lerp(oquad.transform.localPosition, opponenetWayPoint.transform.localPosition, prec);
+
+            if (oquad.transform.position == opponenetWayPoints[opponenetWayPoints.Length - 1].transform.position)
+            {
+                print("done 1");
+                isRotate = false;
+
+                currentLerpTime = 0;
+                num = 0;
+                isPlayerMoveCard = false;
+            }
+            else if (oquad.transform.position == opponenetWayPoints[num].transform.position)
+            {
+                print("Move to " + num);
+
+                num++;
+
+                currentLerpTime = 0;
+                opponenetWayPoint = wayPoints[num];
+                isRotate = true;
+
+            }
+        }
     }
 
     private void ConnectToServer()
@@ -183,8 +293,6 @@ public class Client : MonoBehaviour
 
         writeMessage(message);
     }
-
-    float speed = 0.5f;
 
     public void ClickReset()
     {
@@ -388,11 +496,11 @@ public class Client : MonoBehaviour
     {
         if (gameStatMessage.playerName == CurrentPlayerName)
         {
-            loadPanelCardButtons(currentCardList, true);
+            loadPanelCardButtonsSetActive(currentCardList, true);
         }
         else
         {
-            loadPanelCardButtons(currentCardList, false);
+            loadPanelCardButtonsSetActive(currentCardList, false);
         }
 
     }
@@ -436,7 +544,7 @@ public class Client : MonoBehaviour
 
         if (message.playerName == this.CurrentPlayerName)
         {
-            loadPanelCardButtons(currentCardList, true);
+            loadPanelCardButtonsSetActive(currentCardList, true);
 
         }
 
@@ -460,17 +568,17 @@ public class Client : MonoBehaviour
             playerWonTrickCount++;
             playerWonTrickCountText.text = playerWonTrickCount.ToString();
 
-            loadPanelCardButtons(currentCardList, true);
+            loadPanelCardButtonsSetActive(currentCardList, true);
         }
         else
-        {          
-            ShowThinkBubble("I m lucky in this trick!");
+        {
+            ShowThinkBubble("I'm lucky in this trick!");
 
             loadWonCard(opponentWonCardPanel);
             opponentWonTrickCount++;
             opponentWonTrickCountText.text = opponentWonTrickCount.ToString();
 
-            loadPanelCardButtons(currentCardList, false);
+            loadPanelCardButtonsSetActive(currentCardList, false);
         }
 
 
@@ -491,9 +599,13 @@ public class Client : MonoBehaviour
                 loadSelectedCardToPanel(playGameMessage.card, Player2BottomPosition);
             }
 
-            loadPanelCardButtons(currentCardList, true);
-        }
+            loadPanelCardButtonsSetActive(currentCardList, true);
 
+            isOppenonetPlayerMoveCard = true;
+
+            opponenetWayPoint = opponenetWayPoints[0];
+        }
+        
     }
 
     private void playWrongCardPopup(PlayGameMessage playGameMessage)
@@ -514,7 +626,7 @@ public class Client : MonoBehaviour
                 destroyChilds(Player2TopPosition);
             }
 
-            loadPanelCardButtons(currentCardList, true);
+            loadPanelCardButtonsSetActive(currentCardList, true);
         }
     }
 
@@ -533,7 +645,7 @@ public class Client : MonoBehaviour
 
     private void loadCardsMessage(CardMessage cardMessage)
     {
-        loadPanelCardButtons(cardMessage.initialSetOfCards, false);
+        loadPanelCardButtons(cardMessage.initialSetOfCards);
 
         loadOpponentPanelCardButtons(currentCardList.Count);
     }
@@ -585,45 +697,74 @@ public class Client : MonoBehaviour
         mainMessage.text = message;
     }
 
-    void loadPanelCardButtons(List<String> cards, bool isInteractable)
+    void loadPanelCardButtons(List<String> cards)
     {
+        //currentCardList = new List<string>();
+        //currentCardList = cards;
+
+        //destroyChilds(playerCardPanel);
+
+        //// panelHide(cardPanel);
+
+        //int i = 0;
+
+        //foreach (String card in cards)
+        //{
+
+        //    float corrdicate = i * 3;
+
+        //    GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
+
+        //    goButton.name = card;
+
+        //    //goButton.transform.SetParent(playerCardPanel, isInteractable);
+
+        //    goButton.transform.SetParent(playerCardPanel.transform);
+
+        //    //goButton.transform.localScale = new Vector3(.50f, .50f, .50f);
+        //    goButton.transform.localPosition = new Vector3(corrdicate, 0, 0);
+
+
+        //    // set button click
+        //    Button tempButton = goButton.GetComponentInChildren<Button>();
+        //    tempButton.onClick.AddListener(() => CardSelectButton_OnClick(card));
+        //    tempButton.interactable = isInteractable;
+        //    //tempButton.interactable = isInteractable;
+
+        //    Image image = goButton.GetComponentInChildren<Image>();
+
+        //    image.sprite = getSprite(card);
+
+        //    gameObjectShow(goButton);
+
+        //    i++;
+        //}
+
+        //playerCardPanel.gameObject.SetActive(true);
+
+
         currentCardList = new List<string>();
         currentCardList = cards;
 
-        destroyChilds(playerCardPanel);
-
-        // panelHide(cardPanel);
-
-        int i = 0;
+        int i = 1;
 
         foreach (String card in cards)
         {
+            String buttonName = "Button_" + i;
 
-            float corrdicate = i * 3;
+            Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
-            GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
+            button.interactable = false;
 
-            goButton.name = card;
+            button.GetComponent<Image>().sprite = getSprite(card);
 
-            //goButton.transform.SetParent(playerCardPanel, isInteractable);
+            String quadName = "Quad_" + i;
 
-            goButton.transform.SetParent(playerCardPanel.transform);
+            GameObject myQuad = GameObject.Find(quadName);
 
-            //goButton.transform.localScale = new Vector3(.50f, .50f, .50f);
-            goButton.transform.localPosition = new Vector3(corrdicate, 0, 0);
+            Material yourMaterial = (Material)Resources.Load("images/Materials/" + card, typeof(Material));
 
-
-            // set button click
-            Button tempButton = goButton.GetComponentInChildren<Button>();
-            tempButton.onClick.AddListener(() => CardSelectButton_OnClick(card));
-            tempButton.interactable = isInteractable;
-            //tempButton.interactable = isInteractable;
-
-            Image image = goButton.GetComponentInChildren<Image>();
-
-            image.sprite = getSprite(card);
-
-            gameObjectShow(goButton);
+            myQuad.GetComponent<Renderer>().material = yourMaterial;
 
             i++;
         }
@@ -631,32 +772,85 @@ public class Client : MonoBehaviour
         playerCardPanel.gameObject.SetActive(true);
     }
 
-    private void loadOpponentPanelCardButtons(int cardCount)
+    void loadPanelCardButtonsSetActive(List<String> cards, bool isInteractable)
     {
-        destroyChilds(opponentCardPanel);
-
-        opponentCardPanel.gameObject.SetActive(false);
-
-        for (int i = 0; i < cardCount; i++)
+        for (int i = 1; i < 9; i++)
         {
-            int corrdinate = i * 3;
+            bool isInList = selectedCardIdList.IndexOf(i) != -1;
 
-            GameObject goButton = (GameObject)Instantiate(middlePrefabButton);
+            if (!isInList)
+            {
+                String buttonName = "Button_" + i;
 
-            goButton.transform.SetParent(opponentCardPanel, false);
-            //goButton.transform.localScale = new Vector3(1, .50f, .50f);
-            goButton.transform.localPosition = new Vector3(corrdinate, 0, 0);
+                Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
-            // set image
-            Image image = goButton.GetComponentInChildren<Image>();
-
-            image.sprite = getSprite("back");
-
-            gameObjectShow(goButton);
-
+                button.interactable = isInteractable;
+            }
         }
 
-        opponentCardPanel.gameObject.SetActive(true);
+
+        //foreach (String card in cards)
+        //{
+        //    String buttonName = "Button_" + i;
+
+        //    Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
+
+        //    if (button != null)
+        //    {
+        //        button.interactable = isInteractable;
+        //    }
+
+        //    i++;
+        //}
+
+        playerCardPanel.gameObject.SetActive(true);
+    }
+
+    private void loadOpponentPanelCardButtons(int cardCount)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            String quadName = "OQuad_" + i;
+
+            GameObject myQuad = GameObject.Find(quadName);
+
+            if (i > cardCount)
+            {
+                myQuad.gameObject.SetActive(false);
+
+                //    Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
+
+                //    myQuad.GetComponent<Renderer>().material = yourMaterial;
+                //} else
+                //{
+
+            }
+
+            i++;
+        }
+
+        //opponentCardPanel.gameObject.SetActive(false);
+
+        //for (int i = 0; i < cardCount; i++)
+        //{
+        //    int corrdinate = i * 3;
+
+        //    GameObject goButton = (GameObject)Instantiate(middlePrefabButton);
+
+        //    goButton.transform.SetParent(opponentCardPanel, false);
+        //    //goButton.transform.localScale = new Vector3(1, .50f, .50f);
+        //    goButton.transform.localPosition = new Vector3(corrdinate, 0, 0);
+
+        //    // set image
+        //    Image image = goButton.GetComponentInChildren<Image>();
+
+        //    image.sprite = getSprite("back");
+
+        //    gameObjectShow(goButton);
+
+        //}
+
+        //opponentCardPanel.gameObject.SetActive(true);
     }
 
     void CardSelectButton_OnClick(string card)
@@ -729,7 +923,7 @@ public class Client : MonoBehaviour
     {
         currentCardList.Remove(card);
 
-        loadPanelCardButtons(currentCardList, false);
+        loadPanelCardButtonsSetActive(currentCardList, false);
     }
 
     void loadSelectedCardToPanel(string card, GameObject panel)
@@ -906,4 +1100,34 @@ public class Client : MonoBehaviour
         ThinkBubble.SetActive(false);
     }
 
+    public void CardSelectButton2_OnClick(int id)
+    {
+        selectedCardIdList.Add(id);
+
+        String buttonName = "Button_" + id;
+        Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
+
+        Sprite sprite = button.GetComponent<Image>().sprite;
+
+        String card = sprite.name;
+
+        button.gameObject.SetActive(false);
+
+        String quadName = "Quad_" + id;
+        GameObject myQuad = GameObject.Find(quadName);
+        currentQuadObject = myQuad;
+
+        wayPoint = wayPoints[num];
+
+        isPlayerMoveCard = true;
+
+        removeSelectedCardFromList(card);
+
+        Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
+
+        message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
+
+        StartCoroutine(waitForSeconds(3f, message));
+
+    }
 }
