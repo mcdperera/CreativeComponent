@@ -15,11 +15,11 @@ public class Client : MonoBehaviour
     public GameObject ThinkBubble;
     public Text thinkBubbleText;
 
-    public GameObject Player1TopPosition;
-    public GameObject Player2TopPosition;
+    //public GameObject Player1TopPosition;
+    //public GameObject Player2TopPosition;
 
-    public GameObject Player1BottomPosition;
-    public GameObject Player2BottomPosition;
+    //public GameObject Player1BottomPosition;
+    //public GameObject Player2BottomPosition;
 
     public Button resetButton;
 
@@ -106,7 +106,13 @@ public class Client : MonoBehaviour
 
     private bool isOppenonetPlayerMoveCard = false;
 
+    private bool isEndTrick = false;
+
     private List<int> selectedCardIdList;
+
+    public GameObject PlayerWonCards;
+
+    public GameObject OponentWonCards;
 
     private void Awake()
     {
@@ -173,6 +179,34 @@ public class Client : MonoBehaviour
 
 
         //StartCoroutine(Move(cube1, cube2.transform.localPosition));
+        ResetGameObjectsWithTag(false);
+    }
+
+    private void activeAll(bool isActive)
+    {
+
+        //GameObject[] goArray = GameObject.FindGameObjectsWithTag("myTag");
+
+        //foreach (GameObject item in goArray)
+        //{
+        //    item.SetActive(isActive);
+        //}
+
+        //for (int i = 1; i <= 8; i++)
+        //{
+        //    String buttonName = "Button_" + i;
+        //    Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
+        //    button.gameObject.SetActive(isActive);
+
+        //    String quadName = "Quad_" + i;
+        //    GameObject myQuad = GameObject.Find(quadName);
+        //    myQuad.gameObject.SetActive(isActive);
+
+        //    quadName = "OQuad_" + i;
+        //    myQuad = GameObject.Find(quadName);
+        //    myQuad.gameObject.SetActive(isActive);
+        //}
+
     }
 
     void Update()
@@ -237,34 +271,122 @@ public class Client : MonoBehaviour
 
             if (isRotate)
             {
-                oquad.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+                currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
             }
 
-            oquad.transform.position = Vector3.Lerp(oquad.transform.localPosition, opponenetWayPoint.transform.localPosition, prec);
+            currentOpnontQuadObject.transform.position = Vector3.Lerp(currentOpnontQuadObject.transform.localPosition,
+                opponenetWayPoint.transform.localPosition, prec);
 
-            if (oquad.transform.position == opponenetWayPoints[opponenetWayPoints.Length - 1].transform.position)
+            if (currentOpnontQuadObject.transform.position == opponenetWayPoints[opponenetWayPoints.Length - 1].transform.position)
             {
                 print("done 1");
                 isRotate = false;
 
                 currentLerpTime = 0;
                 num = 0;
-                isPlayerMoveCard = false;
+                isOppenonetPlayerMoveCard = false;
+
             }
-            else if (oquad.transform.position == opponenetWayPoints[num].transform.position)
+            else if (currentOpnontQuadObject.transform.position == opponenetWayPoints[num].transform.position)
             {
                 print("Move to " + num);
 
                 num++;
 
                 currentLerpTime = 0;
-                opponenetWayPoint = wayPoints[num];
+                opponenetWayPoint = opponenetWayPoints[num];
                 isRotate = true;
 
             }
         }
+
+
+        //if (isEndTrick)
+        //{
+        //    ResetQuad(currentQuadObject);
+        //    ResetQuad(currentOpnontQuadObject);
+
+        //    isEndTrick = false;
+        //}
+
+        //    currentLerpTime += Time.deltaTime;
+
+        //    if (currentLerpTime >= lerpTime)
+        //    {
+        //        currentLerpTime = lerpTime;
+        //    }
+
+        //    float prec = currentLerpTime / lerpTime;
+
+        //    if (isRotate)
+        //    {              
+        //        currentQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+        //        currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
+
+        //        Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
+
+        //        currentQuadObject.GetComponent<Renderer>().material = yourMaterial;
+        //        currentOpnontQuadObject.GetComponent<Renderer>().material = yourMaterial;
+
+        //        isRotate = false;
+        //    }
+
+        //    currentQuadObject.transform.position = Vector3.Lerp(currentQuadObject.transform.localPosition,
+        //     PlayerWonCards.transform.localPosition, prec);
+
+        //    currentOpnontQuadObject.transform.position = Vector3.Lerp(currentOpnontQuadObject.transform.localPosition,
+        //        OponentWonCards.transform.localPosition, prec);
+
+        //    if (currentOpnontQuadObject.transform.position == OponentWonCards.transform.position)
+        //    {
+        //        print("done 1");
+        //        isRotate = false;
+        //        currentLerpTime = 0;
+        //        isEndTrick = false;
+
+        //        ResetQuad(currentQuadObject);
+        //        ResetQuad(currentOpnontQuadObject);                
+        //    }
+
+        //}
+
     }
 
+    private void ResetQuad(GameObject quadObject, bool isOpponent)
+    {
+        quadObject.GetComponent<Renderer>().material = null;
+
+        if (isOpponent)
+        {
+
+            Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
+
+            quadObject.GetComponent<Renderer>().material = yourMaterial;
+        }
+
+        String quadName = quadObject.name + "_Intial";
+        GameObject initialQuad = GameObject.Find(quadName);
+
+        quadObject.transform.position = initialQuad.transform.position;
+        quadObject.transform.rotation = initialQuad.transform.rotation;
+
+        quadObject.gameObject.SetActive(false);
+    }
+
+
+    private void ResetGameObjectsWithTag(bool isActive)
+    {
+        var fooGroup = Resources.FindObjectsOfTypeAll<GameObject>();// .FindObjectsOfTypeAll<PrimitiveType.Quad>();
+
+        foreach (GameObject gameObject in fooGroup)
+        {
+            if (gameObject.tag == "myTag")
+            {
+                gameObject.SetActive(isActive);
+            }
+        }
+
+    }
     private void ConnectToServer()
     {
         TcpClient client = new TcpClient("10.203.72.10", 1500);
@@ -490,6 +612,8 @@ public class Client : MonoBehaviour
     private void setMatchStatMessage(string matchStatMessage)
     {
         resultText.text = matchStatMessage;
+
+        ShowThinkBubble(matchStatMessage);
     }
 
     private void setTeamScoreMessage(GameStatMessage gameStatMessage)
@@ -550,19 +674,22 @@ public class Client : MonoBehaviour
 
     }
 
+    int currentPlayerMessageCount = 0;
+    int nextPlayerMessageCount = 0;
+
     private void setTrickWonMessage(PlayGameMessage playGameMessage)
     {
-        destroyChilds(Player1TopPosition);
-
-        destroyChilds(Player2TopPosition);
-
-        destroyChilds(Player1BottomPosition);
-
-        destroyChilds(Player2BottomPosition);
 
         if (playGameMessage.wonPlayerName == CurrentPlayerName)
         {
-            ShowThinkBubble("You won the trick!");
+            if (currentPlayerMessageCount % 3 == 0)
+                ShowThinkBubble("You won the trick!");
+            else if (currentPlayerMessageCount % 3 == 1)
+                ShowThinkBubble("You are lucky on this time!");
+            else if (currentPlayerMessageCount % 3 == 2)
+                ShowThinkBubble("Hey hey you get the advantage!");
+
+            currentPlayerMessageCount++;
 
             loadWonCard(playerWonCardPanel);
             playerWonTrickCount++;
@@ -572,7 +699,14 @@ public class Client : MonoBehaviour
         }
         else
         {
-            ShowThinkBubble("I'm lucky in this trick!");
+            if (nextPlayerMessageCount % 3 == 0)
+                ShowThinkBubble("I'm lucky in this trick!");
+            else if (nextPlayerMessageCount % 3 == 1)
+                ShowThinkBubble("I am moving forward!");
+            else if (nextPlayerMessageCount % 3 == 2)
+                ShowThinkBubble("I am making an advantage!");
+
+            nextPlayerMessageCount++;
 
             loadWonCard(opponentWonCardPanel);
             opponentWonTrickCount++;
@@ -581,31 +715,37 @@ public class Client : MonoBehaviour
             loadPanelCardButtonsSetActive(currentCardList, false);
         }
 
-
+        ResetQuad(currentQuadObject, false);
+        ResetQuad(currentOpnontQuadObject, true);
     }
+
+    int oponentCardCount = 1;
 
     private void setOtherPlayerCard(PlayGameMessage playGameMessage)
     {
         if (playGameMessage.playerName != CurrentPlayerName)
         {
-            loadOpponentPanelCardButtons(currentCardList.Count - 1);
+            int cardCount = currentCardList.Count - 1;
 
-            if (playGameMessage.playerName.ToLower() == player1name)
-            {
-                loadSelectedCardToPanel(playGameMessage.card, Player1BottomPosition);
-            }
-            else
-            {
-                loadSelectedCardToPanel(playGameMessage.card, Player2BottomPosition);
-            }
+            String quadName = "OQuad_" + oponentCardCount;
+
+            GameObject myQuad = GameObject.Find(quadName);
+
+            Material yourMaterial = (Material)Resources.Load("images/Materials/" + playGameMessage.card, typeof(Material));
+
+            myQuad.GetComponent<Renderer>().material = yourMaterial;
+
+            currentOpnontQuadObject = myQuad;
 
             loadPanelCardButtonsSetActive(currentCardList, true);
 
             isOppenonetPlayerMoveCard = true;
 
             opponenetWayPoint = opponenetWayPoints[0];
+
+            oponentCardCount++;
         }
-        
+
     }
 
     private void playWrongCardPopup(PlayGameMessage playGameMessage)
@@ -617,14 +757,11 @@ public class Client : MonoBehaviour
 
             currentCardList.Add(lastSelectedCard);
 
-            if (this.CurrentPlayerName.ToLower() == player1name)
-            {
-                destroyChilds(Player1TopPosition);
-            }
-            else
-            {
-                destroyChilds(Player2TopPosition);
-            }
+            currentButton.gameObject.SetActive(true);
+
+            ResetQuad(currentQuadObject, false);
+
+            ShowThinkBubble("Dont play wrong card!");
 
             loadPanelCardButtonsSetActive(currentCardList, true);
         }
@@ -645,6 +782,10 @@ public class Client : MonoBehaviour
 
     private void loadCardsMessage(CardMessage cardMessage)
     {
+        oponentCardCount = 1;
+
+        ResetGameObjectsWithTag(true);
+
         loadPanelCardButtons(cardMessage.initialSetOfCards);
 
         loadOpponentPanelCardButtons(currentCardList.Count);
@@ -774,41 +915,26 @@ public class Client : MonoBehaviour
 
     void loadPanelCardButtonsSetActive(List<String> cards, bool isInteractable)
     {
-        for (int i = 1; i < 9; i++)
+        for (int i = 1; i <= 8; i++)
         {
-            bool isInList = selectedCardIdList.IndexOf(i) != -1;
+            String buttonName = "Button_" + i;
 
-            if (!isInList)
+            if (GameObject.Find(buttonName) != null)
             {
-                String buttonName = "Button_" + i;
-
                 Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
                 button.interactable = isInteractable;
             }
+
         }
 
-
-        //foreach (String card in cards)
-        //{
-        //    String buttonName = "Button_" + i;
-
-        //    Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
-
-        //    if (button != null)
-        //    {
-        //        button.interactable = isInteractable;
-        //    }
-
-        //    i++;
-        //}
 
         playerCardPanel.gameObject.SetActive(true);
     }
 
     private void loadOpponentPanelCardButtons(int cardCount)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 1; i <= 8; i++)
         {
             String quadName = "OQuad_" + i;
 
@@ -826,7 +952,6 @@ public class Client : MonoBehaviour
 
             }
 
-            i++;
         }
 
         //opponentCardPanel.gameObject.SetActive(false);
@@ -853,71 +978,71 @@ public class Client : MonoBehaviour
         //opponentCardPanel.gameObject.SetActive(true);
     }
 
-    void CardSelectButton_OnClick(string card)
-    {
-        Debug.Log("Button clicked = " + card);
+    //void CardSelectButton_OnClick(string card)
+    //{
+    //    Debug.Log("Button clicked = " + card);
 
-        lastSelectedCard = card;
+    //    lastSelectedCard = card;
 
-        //loadCardToPanel(card, playerSelectedCardPanel);
+    //    //loadCardToPanel(card, playerSelectedCardPanel);
 
-        //GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
+    //    //GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
 
-        GameObject goButton = new GameObject(card);
+    //    GameObject goButton = new GameObject(card);
 
-        goButton.AddComponent<Image>();
+    //    goButton.AddComponent<Image>();
 
-        Image image = goButton.GetComponentInChildren<Image>();
+    //    Image image = goButton.GetComponentInChildren<Image>();
 
-        image.sprite = getSprite(card);
+    //    image.sprite = getSprite(card);
 
-        image.rectTransform.sizeDelta = new Vector2(0.02f, .03f);
+    //    image.rectTransform.sizeDelta = new Vector2(0.02f, .03f);
 
-        gameObjectShow(goButton);
+    //    gameObjectShow(goButton);
 
 
-        if (this.CurrentPlayerName.ToLower() == player1name)
-        {
-            StartCoroutine(Move(goButton, Player1TopPosition.transform.position));
+    //    if (this.CurrentPlayerName.ToLower() == player1name)
+    //    {
+    //        StartCoroutine(Move(goButton, Player1TopPosition.transform.position));
 
-            goButton.transform.parent = Player1TopPosition.transform;
-            goButton.transform.position = Player1TopPosition.transform.position;
+    //        goButton.transform.parent = Player1TopPosition.transform;
+    //        goButton.transform.position = Player1TopPosition.transform.position;
 
-            //goButton.transform.parent = null;
+    //        //goButton.transform.parent = null;
 
-            //goButton.transform.Rotate(-90f, 0f, 0f);
+    //        //goButton.transform.Rotate(-90f, 0f, 0f);
 
-            //StartCoroutine(Move(goButton, Player1BottomPosition.transform.position));
+    //        //StartCoroutine(Move(goButton, Player1BottomPosition.transform.position));
 
-            //goButton.transform.parent = Player1BottomPosition.transform;
-            //goButton.transform.position = Player1BottomPosition.transform.position;
+    //        //goButton.transform.parent = Player1BottomPosition.transform;
+    //        //goButton.transform.position = Player1BottomPosition.transform.position;
 
-        }
-        else
-        {
-            StartCoroutine(Move(goButton, Player2TopPosition.transform.position));
+    //    }
+    //    else
+    //    {
+    //        StartCoroutine(Move(goButton, Player2TopPosition.transform.position));
 
-            goButton.transform.parent = Player2TopPosition.transform;
-            goButton.transform.position = Player2TopPosition.transform.position;
+    //        goButton.transform.parent = Player2TopPosition.transform;
+    //        goButton.transform.position = Player2TopPosition.transform.position;
 
-            //goButton.transform.parent = null;
+    //        //goButton.transform.parent = null;
 
-            //goButton.transform.Rotate(-90f, 0f, 0f);
+    //        //goButton.transform.Rotate(-90f, 0f, 0f);
 
-            //StartCoroutine(Move(goButton, Player2BottomPosition.transform.position));
+    //        //StartCoroutine(Move(goButton, Player2BottomPosition.transform.position));
 
-            //goButton.transform.parent = Player2BottomPosition.transform;
-            //goButton.transform.position = Player2BottomPosition.transform.position;
-        }
+    //        //goButton.transform.parent = Player2BottomPosition.transform;
+    //        //goButton.transform.position = Player2BottomPosition.transform.position;
+    //    }
 
-        removeSelectedCardFromList(card);
+    //    removeSelectedCardFromList(card);
 
-        Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
+    //    Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
 
-        message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
+    //    message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
 
-        StartCoroutine(waitForSeconds(2f, message));
-    }
+    //    StartCoroutine(waitForSeconds(2f, message));
+    //}
 
     private void removeSelectedCardFromList(string card)
     {
@@ -1100,6 +1225,8 @@ public class Client : MonoBehaviour
         ThinkBubble.SetActive(false);
     }
 
+    private Button currentButton;
+
     public void CardSelectButton2_OnClick(int id)
     {
         selectedCardIdList.Add(id);
@@ -1107,9 +1234,16 @@ public class Client : MonoBehaviour
         String buttonName = "Button_" + id;
         Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
-        Sprite sprite = button.GetComponent<Image>().sprite;
+        string spriteName = button.GetComponent<Image>().sprite.name;
 
-        String card = sprite.name;
+        string card = spriteName;
+
+        if (spriteName.Contains("_"))
+        {
+            card = spriteName.Substring(0, spriteName.Length - 2);
+        }
+
+        currentButton = button;
 
         button.gameObject.SetActive(false);
 
@@ -1127,7 +1261,7 @@ public class Client : MonoBehaviour
 
         message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
 
-        StartCoroutine(waitForSeconds(3f, message));
-
+        writeMessage(message);
+        //StartCoroutine(waitForSeconds(3f, message));
     }
 }
