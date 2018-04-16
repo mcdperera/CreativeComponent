@@ -565,6 +565,12 @@ public class Server {
 
                                 SelectedTrickCardSuit = "";
 
+                                   try {
+                                    TimeUnit.SECONDS.sleep(5);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                   
                                 returnMsg = wonPlayer + " player won the trick.";
 
                                 returnMessage = new Message(
