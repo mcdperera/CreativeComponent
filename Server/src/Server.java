@@ -565,12 +565,12 @@ public class Server {
 
                                 SelectedTrickCardSuit = "";
 
-                                   try {
-                                    TimeUnit.SECONDS.sleep(5);
+                                try {
+                                    TimeUnit.SECONDS.sleep(4);
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                   
+
                                 returnMsg = wonPlayer + " player won the trick.";
 
                                 returnMessage = new Message(
@@ -711,6 +711,10 @@ public class Server {
 
             String trickWonPlayer = "";
 
+            //Map<String, Boolean> selectedCardsWithTrump = new HashMap<String, Boolean>();
+            boolean isFirstCardTrump = false;
+            boolean isSecondCardTrump = false;
+
             ArrayList<String> selectedCards = new ArrayList<>();
 
             for (int i = Clients.size(); --i >= 0;) {
@@ -720,11 +724,42 @@ public class Server {
 
                 if (SelectedTrickCardSuit.equalsIgnoreCase(suit)
                         || suit.equalsIgnoreCase(selectedTrumph)) {
+
+                    if (i == 1 && suit.equalsIgnoreCase(selectedTrumph)) {
+                        isFirstCardTrump = true;
+                    }
+
+                    if (i == 0 && suit.equalsIgnoreCase(selectedTrumph)) {
+                        isSecondCardTrump = true;
+                    }
+
                     selectedCards.add(ct.selectedCard);
+
                 }
+
+            }
+            ArrayList<String> newSelectedCards = new ArrayList<>();
+
+            if ((isFirstCardTrump & isSecondCardTrump) || (!isFirstCardTrump & !isSecondCardTrump)) {
+                newSelectedCards = selectedCards;
+            } else if ((isFirstCardTrump & !isSecondCardTrump) || (!isFirstCardTrump & isSecondCardTrump)) {
+
+                for (String item : selectedCards) {
+
+                    String suit = item.substring(0, 1);
+                    
+                    if (suit.equalsIgnoreCase(selectedTrumph)) {
+                        newSelectedCards.add(item);
+                    }
+                }
+
             }
 
-            String highestCard = getHighestPlayedCard(selectedCards);
+//            } else if (!isFirstCardTrump & isSecondCardTrump) {
+//                selectedCards.remove(0);
+//                newSelectedCards = selectedCards;
+//            }
+            String highestCard = getHighestPlayedCard(newSelectedCards);
 
             for (int i = Clients.size(); --i >= 0;) {
                 ClientThread ct = Clients.get(i);
@@ -740,6 +775,25 @@ public class Server {
         }
 
         private String getHighestPlayedCard(ArrayList<String> selectedCards) {
+
+            String highestCard = "";
+            int highestValue = 0;
+
+            for (String card : selectedCards) {
+
+                Integer cardValue = Integer.parseInt(card.substring(1, card.length()));
+
+                if (highestValue < cardValue) {
+                    highestValue = cardValue;
+                    highestCard = card;
+                }
+            }
+
+            return highestCard;
+
+        }
+
+        private String getHighestPlayedCard2(ArrayList<String> selectedCards) {
 
             String highestCard = "";
             int highestValue = 0;
