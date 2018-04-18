@@ -1,1 +1,6 @@
 # CreativeComponent
+
+
+There are many types of card game applications one can play using a web browser, a mobile device, or a personal computer.  These games can be enjoyable, but they do not provide the kind of experience that one gets playing cards in person with a friend.  But, by employing immersive computing technology, users can get a card-playing experience that is more like playing in-person, even though the players are in two different geographical locations.  The goal of this project is to develop such an experience.
+
+A card-playing application for two players was developed in Unity 3D.  The application was written using the C# programming language on a Windows-based PC; it utilizes a client/server architecture so that users can play the game over the Internet.  Players can join the game either using a monitor, keyboard, and mouse, or using an HTC ViveTM virtual reality headset and the hand-held controllers that come with it.  On the PC, the player sees a room, a game table, the cards, and an avatar representing the other player.  On the Vive, the user sees that same environment, but in a 3D, immersive representation; the Vive supports head tracking, which makes the experience even more immersive.  
