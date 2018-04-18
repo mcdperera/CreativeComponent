@@ -286,6 +286,9 @@ public class Client : MonoBehaviour
                 num = 0;
                 isOppenonetPlayerMoveCard = false;
 
+                StartCoroutine(RemoveAfterSeconds(3));
+
+                loadPanelCardButtonsSetActive(currentCardList, true);
             }
             else if (currentOpnontQuadObject.transform.position == opponenetWayPoints[num].transform.position)
             {
@@ -535,6 +538,7 @@ public class Client : MonoBehaviour
                     setOtherPlayers(message.ConnectionMessage);
                     break;
                 case MessageType.DEAL_CARDS_TO_CLIENT:
+                    gameObjectShow(avatar);
                     loadCardsMessage(message.CardMessage);
                     displayMessage("Waiting for the other player choose the trump!");
                     break;
@@ -695,6 +699,8 @@ public class Client : MonoBehaviour
             playerWonTrickCount++;
             playerWonTrickCountText.text = playerWonTrickCount.ToString();
 
+            StartCoroutine(RemoveAfterSeconds(3));
+
             loadPanelCardButtonsSetActive(currentCardList, true);
         }
         else
@@ -711,6 +717,7 @@ public class Client : MonoBehaviour
             loadWonCard(opponentWonCardPanel);
             opponentWonTrickCount++;
             opponentWonTrickCountText.text = opponentWonTrickCount.ToString();
+            
 
             loadPanelCardButtonsSetActive(currentCardList, false);
         }
@@ -736,36 +743,19 @@ public class Client : MonoBehaviour
             myQuad.GetComponent<Renderer>().material = yourMaterial;
 
             currentOpnontQuadObject = myQuad;
-
-            loadPanelCardButtonsSetActive(currentCardList, true);
-
+            
             isOppenonetPlayerMoveCard = true;
 
             opponenetWayPoint = opponenetWayPoints[0];
 
             oponentCardCount++;
+
+            
         }
 
     }
 
-    private void playWrongCardPopup(PlayGameMessage playGameMessage)
-    {
-        if (playGameMessage.playerName == CurrentPlayerName)
-        {
-            audioSource.clip = wrongButtonClickAudio;
-            audioSource.Play();
-
-            currentCardList.Add(lastSelectedCard);
-
-            currentButton.gameObject.SetActive(true);
-
-            ResetQuad(currentQuadObject, false);
-
-            ShowThinkBubble("Dont play wrong card!");
-
-            loadPanelCardButtonsSetActive(currentCardList, true);
-        }
-    }
+    
 
     private void playGameMessage(PlayGameMessage playGameMessage)
     {
@@ -805,7 +795,7 @@ public class Client : MonoBehaviour
 
     private void setOtherPlayers(ConnectionMessage connectionMessage)
     {
-        gameObjectShow(avatar);
+  
 
         displayMessage("");
     }
@@ -827,10 +817,6 @@ public class Client : MonoBehaviour
 
         print(connectionMessage.username + " player " + connectionMessage.playerName);
 
-        //if (connectionMessage.isPreviousUser)
-        // {
-        gameObjectShow(avatar);
-        // }
     }
 
     private void displayMessage(string message)
@@ -840,50 +826,7 @@ public class Client : MonoBehaviour
 
     void loadPanelCardButtons(List<String> cards)
     {
-        //currentCardList = new List<string>();
-        //currentCardList = cards;
-
-        //destroyChilds(playerCardPanel);
-
-        //// panelHide(cardPanel);
-
-        //int i = 0;
-
-        //foreach (String card in cards)
-        //{
-
-        //    float corrdicate = i * 3;
-
-        //    GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
-
-        //    goButton.name = card;
-
-        //    //goButton.transform.SetParent(playerCardPanel, isInteractable);
-
-        //    goButton.transform.SetParent(playerCardPanel.transform);
-
-        //    //goButton.transform.localScale = new Vector3(.50f, .50f, .50f);
-        //    goButton.transform.localPosition = new Vector3(corrdicate, 0, 0);
-
-
-        //    // set button click
-        //    Button tempButton = goButton.GetComponentInChildren<Button>();
-        //    tempButton.onClick.AddListener(() => CardSelectButton_OnClick(card));
-        //    tempButton.interactable = isInteractable;
-        //    //tempButton.interactable = isInteractable;
-
-        //    Image image = goButton.GetComponentInChildren<Image>();
-
-        //    image.sprite = getSprite(card);
-
-        //    gameObjectShow(goButton);
-
-        //    i++;
-        //}
-
-        //playerCardPanel.gameObject.SetActive(true);
-
-
+      
         currentCardList = new List<string>();
         currentCardList = cards;
 
@@ -954,95 +897,7 @@ public class Client : MonoBehaviour
 
         }
 
-        //opponentCardPanel.gameObject.SetActive(false);
-
-        //for (int i = 0; i < cardCount; i++)
-        //{
-        //    int corrdinate = i * 3;
-
-        //    GameObject goButton = (GameObject)Instantiate(middlePrefabButton);
-
-        //    goButton.transform.SetParent(opponentCardPanel, false);
-        //    //goButton.transform.localScale = new Vector3(1, .50f, .50f);
-        //    goButton.transform.localPosition = new Vector3(corrdinate, 0, 0);
-
-        //    // set image
-        //    Image image = goButton.GetComponentInChildren<Image>();
-
-        //    image.sprite = getSprite("back");
-
-        //    gameObjectShow(goButton);
-
-        //}
-
-        //opponentCardPanel.gameObject.SetActive(true);
     }
-
-    //void CardSelectButton_OnClick(string card)
-    //{
-    //    Debug.Log("Button clicked = " + card);
-
-    //    lastSelectedCard = card;
-
-    //    //loadCardToPanel(card, playerSelectedCardPanel);
-
-    //    //GameObject goButton = (GameObject)Instantiate(tooSmallPrefabButton);
-
-    //    GameObject goButton = new GameObject(card);
-
-    //    goButton.AddComponent<Image>();
-
-    //    Image image = goButton.GetComponentInChildren<Image>();
-
-    //    image.sprite = getSprite(card);
-
-    //    image.rectTransform.sizeDelta = new Vector2(0.02f, .03f);
-
-    //    gameObjectShow(goButton);
-
-
-    //    if (this.CurrentPlayerName.ToLower() == player1name)
-    //    {
-    //        StartCoroutine(Move(goButton, Player1TopPosition.transform.position));
-
-    //        goButton.transform.parent = Player1TopPosition.transform;
-    //        goButton.transform.position = Player1TopPosition.transform.position;
-
-    //        //goButton.transform.parent = null;
-
-    //        //goButton.transform.Rotate(-90f, 0f, 0f);
-
-    //        //StartCoroutine(Move(goButton, Player1BottomPosition.transform.position));
-
-    //        //goButton.transform.parent = Player1BottomPosition.transform;
-    //        //goButton.transform.position = Player1BottomPosition.transform.position;
-
-    //    }
-    //    else
-    //    {
-    //        StartCoroutine(Move(goButton, Player2TopPosition.transform.position));
-
-    //        goButton.transform.parent = Player2TopPosition.transform;
-    //        goButton.transform.position = Player2TopPosition.transform.position;
-
-    //        //goButton.transform.parent = null;
-
-    //        //goButton.transform.Rotate(-90f, 0f, 0f);
-
-    //        //StartCoroutine(Move(goButton, Player2BottomPosition.transform.position));
-
-    //        //goButton.transform.parent = Player2BottomPosition.transform;
-    //        //goButton.transform.position = Player2BottomPosition.transform.position;
-    //    }
-
-    //    removeSelectedCardFromList(card);
-
-    //    Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
-
-    //    message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
-
-    //    StartCoroutine(waitForSeconds(2f, message));
-    //}
 
     private void removeSelectedCardFromList(string card)
     {
@@ -1262,6 +1117,30 @@ public class Client : MonoBehaviour
         message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
 
         writeMessage(message);
-        //StartCoroutine(waitForSeconds(3f, message));
+    }
+
+    private void playWrongCardPopup(PlayGameMessage playGameMessage)
+    {
+        if (playGameMessage.playerName == CurrentPlayerName)
+        {
+            audioSource.clip = wrongButtonClickAudio;
+            audioSource.Play();
+
+            currentCardList.Add(lastSelectedCard);
+
+            currentButton.gameObject.SetActive(true);
+
+            wayPoint = null;
+
+            isPlayerMoveCard = false;
+                 
+            ResetQuad(currentQuadObject, false);
+
+            currentQuadObject = null;
+
+            ShowThinkBubble("Dont play wrong card!");
+
+            loadPanelCardButtonsSetActive(currentCardList, true);
+        }
     }
 }
