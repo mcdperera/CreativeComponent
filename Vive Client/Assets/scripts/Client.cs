@@ -97,11 +97,7 @@ public class Client : MonoBehaviour
     private bool isPlayerMoveCard = false;
 
     private bool isOppenonetPlayerMoveCard = false;
-
-    private bool isEndTrick = false;
-
-    private List<int> selectedCardIdList;
-
+        
     private void Awake()
     {
         Button btn = connectButton.GetComponent<Button>();
@@ -126,23 +122,21 @@ public class Client : MonoBehaviour
 
     void Start()
     {
-        selectedCardIdList = new List<int>();
+        //List<string> list = new List<string>();
 
-        List<string> list = new List<string>();
+        //list.Add("c9");
+        //list.Add("c7");
+        //list.Add("c14");
 
-        list.Add("c9");
-        list.Add("c7");
-        list.Add("c14");
+        //list.Add("c13");
+        //list.Add("d12");
+        //list.Add("d8");
 
-        list.Add("c13");
-        list.Add("d12");
-        list.Add("d8");
-
-        list.Add("d13");
-        list.Add("d10");
+        //list.Add("d13");
+        //list.Add("d10");
 
 
-        loadPanelCardButtons(list);
+        //loadPanelCardButtons(list);
 
         //loadWonCard(opponentWonCardPanel);
         //loadWonCard(playerWonCardPanel);
@@ -165,7 +159,7 @@ public class Client : MonoBehaviour
 
 
         //StartCoroutine(Move(cube1, cube2.transform.localPosition));
-        ResetGameObjectsWithTag(true);
+        ResetGameObjectsWithTag(false);
     }
 
     void Update()
@@ -230,7 +224,7 @@ public class Client : MonoBehaviour
 
             if (isRotate)
             {
-                currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 45, 0, 0));
+                currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 43, 0, 0));
             }
 
             currentOpnontQuadObject.transform.position = Vector3.Lerp(currentOpnontQuadObject.transform.localPosition,
@@ -248,6 +242,7 @@ public class Client : MonoBehaviour
                 StartCoroutine(RemoveAfterSeconds(3));
 
                 loadPanelCardButtonsSetActive(currentCardList, true);
+                
             }
             else if (currentOpnontQuadObject.transform.position == opponenetWayPoints[num].transform.position)
             {
@@ -261,57 +256,7 @@ public class Client : MonoBehaviour
 
             }
         }
-
-
-        //if (isEndTrick)
-        //{
-        //    ResetQuad(currentQuadObject);
-        //    ResetQuad(currentOpnontQuadObject);
-
-        //    isEndTrick = false;
-        //}
-
-        //    currentLerpTime += Time.deltaTime;
-
-        //    if (currentLerpTime >= lerpTime)
-        //    {
-        //        currentLerpTime = lerpTime;
-        //    }
-
-        //    float prec = currentLerpTime / lerpTime;
-
-        //    if (isRotate)
-        //    {              
-        //        currentQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
-        //        currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
-
-        //        Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
-
-        //        currentQuadObject.GetComponent<Renderer>().material = yourMaterial;
-        //        currentOpnontQuadObject.GetComponent<Renderer>().material = yourMaterial;
-
-        //        isRotate = false;
-        //    }
-
-        //    currentQuadObject.transform.position = Vector3.Lerp(currentQuadObject.transform.localPosition,
-        //     PlayerWonCards.transform.localPosition, prec);
-
-        //    currentOpnontQuadObject.transform.position = Vector3.Lerp(currentOpnontQuadObject.transform.localPosition,
-        //        OponentWonCards.transform.localPosition, prec);
-
-        //    if (currentOpnontQuadObject.transform.position == OponentWonCards.transform.position)
-        //    {
-        //        print("done 1");
-        //        isRotate = false;
-        //        currentLerpTime = 0;
-        //        isEndTrick = false;
-
-        //        ResetQuad(currentQuadObject);
-        //        ResetQuad(currentOpnontQuadObject);                
-        //    }
-
-        //}
-
+        
     }
 
     private void ResetQuad(GameObject quadObject, bool isOpponent)
@@ -992,8 +937,6 @@ public class Client : MonoBehaviour
 
     public void CardSelectButton2_OnClick(int id)
     {
-        selectedCardIdList.Add(id);
-
         String buttonName = "Button_" + id;
         Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
 
