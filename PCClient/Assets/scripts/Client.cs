@@ -216,7 +216,7 @@ public class Client : MonoBehaviour
             readMessage();
         }
 
-        if (isPlayerMoveCard)
+        if (isPlayerMoveCard && currentQuadObject != null)
         {
             currentLerpTime += Time.deltaTime;
 
@@ -258,7 +258,7 @@ public class Client : MonoBehaviour
         }
 
 
-        if (isOppenonetPlayerMoveCard)
+        if (isOppenonetPlayerMoveCard && currentOpnontQuadObject != null)
         {
             currentLerpTime += Time.deltaTime;
 
@@ -302,56 +302,7 @@ public class Client : MonoBehaviour
 
             }
         }
-
-
-        //if (isEndTrick)
-        //{
-        //    ResetQuad(currentQuadObject);
-        //    ResetQuad(currentOpnontQuadObject);
-
-        //    isEndTrick = false;
-        //}
-
-        //    currentLerpTime += Time.deltaTime;
-
-        //    if (currentLerpTime >= lerpTime)
-        //    {
-        //        currentLerpTime = lerpTime;
-        //    }
-
-        //    float prec = currentLerpTime / lerpTime;
-
-        //    if (isRotate)
-        //    {              
-        //        currentQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
-        //        currentOpnontQuadObject.transform.Rotate(new Vector3(Time.deltaTime * 52, 0, 0));
-
-        //        Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
-
-        //        currentQuadObject.GetComponent<Renderer>().material = yourMaterial;
-        //        currentOpnontQuadObject.GetComponent<Renderer>().material = yourMaterial;
-
-        //        isRotate = false;
-        //    }
-
-        //    currentQuadObject.transform.position = Vector3.Lerp(currentQuadObject.transform.localPosition,
-        //     PlayerWonCards.transform.localPosition, prec);
-
-        //    currentOpnontQuadObject.transform.position = Vector3.Lerp(currentOpnontQuadObject.transform.localPosition,
-        //        OponentWonCards.transform.localPosition, prec);
-
-        //    if (currentOpnontQuadObject.transform.position == OponentWonCards.transform.position)
-        //    {
-        //        print("done 1");
-        //        isRotate = false;
-        //        currentLerpTime = 0;
-        //        isEndTrick = false;
-
-        //        ResetQuad(currentQuadObject);
-        //        ResetQuad(currentOpnontQuadObject);                
-        //    }
-
-        //}
+        
 
     }
 
@@ -1098,6 +1049,8 @@ public class Client : MonoBehaviour
             card = spriteName.Substring(0, spriteName.Length - 2);
         }
 
+        lastSelectedCard = card;
+
         currentButton = button;
 
         button.gameObject.SetActive(false);
@@ -1136,7 +1089,7 @@ public class Client : MonoBehaviour
                  
             ResetQuad(currentQuadObject, false);
 
-            currentQuadObject = null;
+            //currentQuadObject = null;
 
             ShowThinkBubble("Dont play wrong card!");
 
