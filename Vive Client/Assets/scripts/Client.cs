@@ -169,7 +169,7 @@ public class Client : MonoBehaviour
             readMessage();
         }
 
-        if (isPlayerMoveCard)
+        if (isPlayerMoveCard && currentQuadObject != null)
         {
             currentLerpTime += Time.deltaTime;
 
@@ -211,7 +211,7 @@ public class Client : MonoBehaviour
         }
 
 
-        if (isOppenonetPlayerMoveCard)
+        if (isOppenonetPlayerMoveCard && currentOpnontQuadObject != null)
         {
             currentLerpTime += Time.deltaTime;
 
@@ -740,8 +740,7 @@ public class Client : MonoBehaviour
             }
 
         }
-
-
+        
         playerCardPanel.gameObject.SetActive(true);
     }
 
@@ -949,6 +948,7 @@ public class Client : MonoBehaviour
             card = spriteName.Substring(0, spriteName.Length - 2);
         }
 
+        lastSelectedCard = card;
         currentButton = button;
 
         button.gameObject.SetActive(false);
