@@ -280,6 +280,40 @@ public class Client : MonoBehaviour
         quadObject.gameObject.SetActive(false);
     }
 
+    private void ResetAllQuad()
+    {
+        //for (int i = 1; i < 9; i++)
+        //{
+        //    String quadName = "Quad_" + i;
+        //    GameObject quadObject = GameObject.Find(quadName);
+
+        //    String quadInitialName = quadName + "_Intial";
+        //    GameObject initialQuad = GameObject.Find(quadInitialName);
+
+        //    quadObject.transform.position = initialQuad.transform.position;
+        //    quadObject.transform.rotation = initialQuad.transform.rotation;
+
+        //    quadObject.gameObject.SetActive(false);
+        //}
+
+        //for (int i = 1; i < 9; i++)
+        //{
+        //    String quadName = "OQuad_" + i;
+        //    GameObject quadObject = GameObject.Find(quadName);
+
+        //    Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
+        //    quadObject.GetComponent<Renderer>().material = yourMaterial;
+
+        //    String quadInitialName = quadName + "_Intial";
+        //    GameObject initialQuad = GameObject.Find(quadInitialName);
+
+        //    quadObject.transform.position = initialQuad.transform.position;
+        //    quadObject.transform.rotation = initialQuad.transform.rotation;
+
+        //    quadObject.gameObject.SetActive(false);
+        //}
+
+    }
 
     private void ResetGameObjectsWithTag(bool isActive)
     {
@@ -452,6 +486,7 @@ public class Client : MonoBehaviour
                     setMatchStatMessage(message.MatchStatMessage);
                     break;
                 case MessageType.PLAYGAME_SERVERRESPONSE_TEAM_WON_GAME_WITH_DEAL_CARDS:
+                    ResetAllQuad();
                     setMatchStatMessage(message.MatchStatMessage);
                     setDealAgainMessage();
                     clearMyBid();

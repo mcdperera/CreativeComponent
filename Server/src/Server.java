@@ -747,7 +747,7 @@ public class Server {
                 for (String item : selectedCards) {
 
                     String suit = item.substring(0, 1);
-                    
+
                     if (suit.equalsIgnoreCase(selectedTrumph)) {
                         newSelectedCards.add(item);
                     }
@@ -755,15 +755,15 @@ public class Server {
 
             }
 
-//            } else if (!isFirstCardTrump & isSecondCardTrump) {
-//                selectedCards.remove(0);
-//                newSelectedCards = selectedCards;
-//            }
+            display("****************");
+            display("Select card count" + newSelectedCards.size());
+
             String highestCard = getHighestPlayedCard(newSelectedCards);
 
             for (int i = Clients.size(); --i >= 0;) {
                 ClientThread ct = Clients.get(i);
 
+                display("playername " + ct.playername + " selectedCard " + ct.selectedCard);
                 if (ct.selectedCard.equalsIgnoreCase(highestCard)) {
                     trickWonPlayer = ct.playername;
                     ct.wonTrickCouont++;
@@ -771,6 +771,13 @@ public class Server {
                 }
             }
 
+            display("highestCard " + highestCard);
+            display("trickWonPlayer " + trickWonPlayer);
+            display("****************");
+
+            if (trickWonPlayer == "" || trickWonPlayer.isEmpty() || trickWonPlayer == null) {
+                trickWonPlayer = "player_1";
+            }
             return trickWonPlayer;
         }
 

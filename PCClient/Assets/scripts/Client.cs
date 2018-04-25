@@ -302,8 +302,43 @@ public class Client : MonoBehaviour
 
             }
         }
-        
 
+
+    }
+
+    private void ResetAllQuad()
+    {
+        for (int i = 1; i < 9; i++)
+        {
+            String quadName = "Quad_" + i;
+            GameObject quadObject = GameObject.Find(quadName);
+
+            String quadInitialName = quadName + "_Intial";
+            GameObject initialQuad = GameObject.Find(quadInitialName);
+
+            quadObject.transform.position = initialQuad.transform.position;
+            quadObject.transform.rotation = initialQuad.transform.rotation;
+
+            quadObject.gameObject.SetActive(false);
+        }
+
+        for (int i = 1; i < 9; i++)
+        {
+            String quadName = "OQuad_" + i;
+            GameObject quadObject = GameObject.Find(quadName);
+
+            Material yourMaterial = (Material)Resources.Load("images/Materials/back", typeof(Material));
+            quadObject.GetComponent<Renderer>().material = yourMaterial;
+
+            String quadInitialName = quadName + "_Intial";
+            GameObject initialQuad = GameObject.Find(quadInitialName);
+
+            quadObject.transform.position = initialQuad.transform.position;
+            quadObject.transform.rotation = initialQuad.transform.rotation;
+
+            quadObject.gameObject.SetActive(false);
+        }
+             
     }
 
     private void ResetQuad(GameObject quadObject, bool isOpponent)
@@ -343,7 +378,7 @@ public class Client : MonoBehaviour
     }
     private void ConnectToServer()
     {
-        TcpClient client = new TcpClient("10.203.72.10", 1500);
+        TcpClient client = new TcpClient("10.203.72.10", 1500); //Desktop
 
         stream = client.GetStream();
 
@@ -517,13 +552,16 @@ public class Client : MonoBehaviour
                     setTrickWonMessage(message.PlayGameMessage);
                     break;
                 case MessageType.PLAYGAME_SERVERRESPONSE_TEAM_SCORE:
+
                     setTeamScoreMessage(message.GameStatMessage);
-                    setMatchStatMessage(message.MatchStatMessage);
+                    setMatchStatMessage(message.MatchStatMessage);                    
                     break;
                 case MessageType.PLAYGAME_SERVERRESPONSE_TEAM_WON_GAME_WITH_DEAL_CARDS:
                     setMatchStatMessage(message.MatchStatMessage);
                     setDealAgainMessage();
                     clearMyBid();
+
+                    ResetAllQuad();
                     break;
                 case MessageType.PLAYGAME_SERVERRESPONSE_TEAM_WON_MATCH:
                     setMatchStatMessage(message.MatchStatMessage);
@@ -668,7 +706,7 @@ public class Client : MonoBehaviour
             loadWonCard(opponentWonCardPanel);
             opponentWonTrickCount++;
             opponentWonTrickCountText.text = opponentWonTrickCount.ToString();
-            
+
 
             loadPanelCardButtonsSetActive(currentCardList, false);
         }
@@ -694,19 +732,19 @@ public class Client : MonoBehaviour
             myQuad.GetComponent<Renderer>().material = yourMaterial;
 
             currentOpnontQuadObject = myQuad;
-            
+
             isOppenonetPlayerMoveCard = true;
 
             opponenetWayPoint = opponenetWayPoints[0];
 
             oponentCardCount++;
 
-            
+
         }
 
     }
 
-    
+
 
     private void playGameMessage(PlayGameMessage playGameMessage)
     {
@@ -746,7 +784,7 @@ public class Client : MonoBehaviour
 
     private void setOtherPlayers(ConnectionMessage connectionMessage)
     {
-  
+
 
         displayMessage("");
     }
@@ -777,7 +815,7 @@ public class Client : MonoBehaviour
 
     void loadPanelCardButtons(List<String> cards)
     {
-      
+
         currentCardList = new List<string>();
         currentCardList = cards;
 
@@ -1035,41 +1073,46 @@ public class Client : MonoBehaviour
 
     public void CardSelectButton2_OnClick(int id)
     {
-        selectedCardIdList.Add(id);
-
-        String buttonName = "Button_" + id;
-        Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
-
-        string spriteName = button.GetComponent<Image>().sprite.name;
-
-        string card = spriteName;
-
-        if (spriteName.Contains("_"))
+        if (!isOppenonetPlayerMoveCard)
         {
-            card = spriteName.Substring(0, spriteName.Length - 2);
+            selectedCardIdList.Add(id);
+
+            String buttonName = "Button_" + id;
+            Button button = GameObject.Find(buttonName).GetComponent<UnityEngine.UI.Button>();
+
+            string spriteName = button.GetComponent<Image>().sprite.name;
+
+            string card = spriteName;
+
+            if (spriteName.Contains("_"))
+            {
+                card = spriteName.Substring(0, spriteName.Length - 2);
+            }
+
+            lastSelectedCard = card;
+
+            currentButton = button;
+
+            button.gameObject.SetActive(false);
+
+            String quadName = "Quad_" + id;
+            GameObject myQuad = GameObject.Find(quadName);
+            currentQuadObject = myQuad;
+
+            wayPoint = wayPoints[num];
+
+            isPlayerMoveCard = true;
+
+            removeSelectedCardFromList(card);
+
+            Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
+
+            message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
+
+            writeMessage(message);
         }
 
-        lastSelectedCard = card;
 
-        currentButton = button;
-
-        button.gameObject.SetActive(false);
-
-        String quadName = "Quad_" + id;
-        GameObject myQuad = GameObject.Find(quadName);
-        currentQuadObject = myQuad;
-
-        wayPoint = wayPoints[num];
-
-        isPlayerMoveCard = true;
-
-        removeSelectedCardFromList(card);
-
-        Message message = new Message((int)MessageType.PLAYGAME_CLIENTRESPONSE, true, this.CurrentPlayerName + " selected card : " + card, false, 0);
-
-        message.PlayGameMessage = (new PlayGameMessage(this.CurrentPlayerName, card));
-
-        writeMessage(message);
     }
 
     private void playWrongCardPopup(PlayGameMessage playGameMessage)
@@ -1086,14 +1129,14 @@ public class Client : MonoBehaviour
             wayPoint = null;
 
             isPlayerMoveCard = false;
-                 
-            ResetQuad(currentQuadObject, false);
 
             //currentQuadObject = null;
 
             ShowThinkBubble("Dont play wrong card!");
 
             loadPanelCardButtonsSetActive(currentCardList, true);
+
+            ResetQuad(currentQuadObject, false);
         }
     }
 }
